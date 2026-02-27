@@ -7,6 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <style>
     /* ─── VSP Brand Variables ─────────────────────────────────────────────── */
     :root {
@@ -601,14 +603,83 @@
       background: linear-gradient(135deg, #0f1a24 0%, #1a2535 50%, #0f1a24 100%);
       color: var(--white);
     }
-    .map-wrap { max-width: 920px; margin: 0 auto; }
-    .map-pin-label { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; fill: white; }
-    .map-pin-sub { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 400; fill: rgba(255,255,255,0.5); }
-    .map-pulse { animation: mapPulse 2.5s ease-in-out infinite; }
-    @keyframes mapPulse {
-      0%, 100% { opacity: 0.25; }
-      50% { opacity: 0.1; }
+    .map-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
     }
+    #leaflet-map {
+      width: 100%;
+      height: 480px;
+      background: #1a2535;
+    }
+    @media (max-width: 600px) {
+      #leaflet-map { height: 360px; }
+    }
+    /* Leaflet popup overrides */
+    .leaflet-popup-content-wrapper {
+      background: var(--navy-darkest) !important;
+      color: var(--white) !important;
+      border-radius: 10px !important;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.5) !important;
+      border: 1px solid rgba(255,255,255,0.1) !important;
+    }
+    .leaflet-popup-tip { background: var(--navy-darkest) !important; }
+    .leaflet-popup-content {
+      margin: 14px 16px !important;
+      font-family: 'Inter', sans-serif !important;
+    }
+    .leaflet-popup-content .popup-venue {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 2px;
+    }
+    .leaflet-popup-content .popup-location {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 8px;
+    }
+    .leaflet-popup-content .popup-quarter {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .leaflet-popup-content .popup-cta {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green-lightest);
+      text-decoration: none;
+      border: 1px solid rgba(151,243,119,0.3);
+      border-radius: 16px;
+      padding: 5px 14px;
+      margin-top: 6px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .leaflet-popup-content .popup-cta:hover {
+      background: rgba(151,243,119,0.1);
+      border-color: var(--green-lightest);
+    }
+    .leaflet-container a.leaflet-popup-close-button {
+      color: rgba(255,255,255,0.4) !important;
+    }
+    .leaflet-container a.leaflet-popup-close-button:hover {
+      color: var(--white) !important;
+    }
+    /* Hide default Leaflet attribution styling clutter */
+    .leaflet-control-attribution {
+      background: rgba(26,37,53,0.8) !important;
+      color: rgba(255,255,255,0.3) !important;
+      font-size: 10px !important;
+    }
+    .leaflet-control-attribution a { color: rgba(255,255,255,0.4) !important; }
 
     /* ─── Signature Moment ─────────────────────────────────────────────── */
     .signature-moment {
@@ -1601,69 +1672,7 @@
       .timeline-time { color: var(--navy) !important; }
       .nav-dot { display: none !important; }
     }
-
-    /* ─── Leaflet Map Styles ─────────────────────────────────────────────── */
-    #resort-map {
-      width: 100%;
-      height: 460px;
-      border-radius: 12px;
-      overflow: hidden;
-      max-width: 920px;
-      margin: 0 auto;
-    }
-
-    .leaflet-container {
-      background: rgba(20, 30, 50, 0.8);
-      font-family: 'Inter', system-ui, sans-serif;
-    }
-
-    .leaflet-tile-pane {
-      opacity: 0.3;
-    }
-
-    .resort-popup {
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-    }
-
-    .resort-popup .leaflet-popup-content {
-      margin: 10px;
-      color: var(--navy-darkest);
-    }
-
-    .resort-popup .resort-name {
-      font-weight: 700;
-      font-size: 14px;
-      margin-bottom: 4px;
-      color: var(--navy-darkest);
-    }
-
-    .resort-popup .resort-venue {
-      font-size: 12px;
-      color: rgba(0, 0, 0, 0.7);
-    }
-
-    .resort-marker {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      animation: resortPulse 2.5s ease-in-out infinite;
-    }
-
-    @keyframes resortPulse {
-      0%, 100% { transform: scale(1); opacity: 0.8; }
-      50% { transform: scale(1.2); opacity: 0.5; }
-    }
-
-    .resort-marker.deervalley { color: #8fb8d4; }
-    .resort-marker.sedona { color: #d4845a; }
-    .resort-marker.nashville { color: #d4a373; }
-    .resort-marker.miami { color: #4ecdc4; }
-    .resort-marker.cayman { color: #26c6da; }
   </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
 <body>
 
@@ -2356,7 +2365,9 @@
         <h2 class="light">Choose Your Edition</h2>
         <p class="slide-subtitle" style="color:rgba(255,255,255,0.55);margin:0 auto;">Each location creates a different kind of clarity. Pick the environment that matches how you think best.</p>
       </div>
-      <div id="resort-map"></div>
+      <div class="map-wrap">
+        <div id="leaflet-map"></div>
+      </div>
     </div>
   </section>
 
@@ -2656,99 +2667,102 @@
       if (slides[0]) {
         slides[0].classList.add('visible');
       }
-    })();
 
-    /* ── Initialize Leaflet Map with Resort Locations ────────────────── */
-    (function() {
-      const resorts = [
+      /* ── Leaflet Map ─────────────────────────────────────────────── */
+      var map = L.map('leaflet-map', {
+        center: [29.5, -86],
+        zoom: 5,
+        zoomControl: true,
+        scrollWheelZoom: false,
+        attributionControl: true
+      });
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(map);
+
+      var locations = [
         {
-          name: 'Deer Valley',
-          venue: 'Stein Eriksen Lodge · Q3',
-          lat: 40.3667,
-          lng: -111.4758,
-          color: '#8fb8d4',
-          className: 'deervalley'
-        },
-        {
-          name: 'Sedona',
-          venue: 'Enchantment Resort · Q2',
-          lat: 34.4325,
-          lng: -111.7897,
+          lat: 34.8697, lng: -111.8511,
+          venue: 'Enchantment Resort',
+          place: 'Sedona, Arizona',
+          quarter: 'Q2 — The Desert Edition',
           color: '#d4845a',
-          className: 'sedona'
+          url: 'https://www.enchantmentresort.com/',
+          slideId: 'slide-6'
         },
         {
-          name: 'Nashville',
-          venue: 'The Joseph · Q1',
-          lat: 36.1627,
-          lng: -86.7816,
-          color: '#d4a373',
-          className: 'nashville'
+          lat: 40.6261, lng: -111.4978,
+          venue: 'Stein Eriksen Lodge',
+          place: 'Deer Valley, Utah',
+          quarter: 'Q3 — The Mountain Edition',
+          color: '#8fb8d4',
+          url: 'https://www.steinlodge.com/',
+          slideId: 'slide-7'
         },
         {
-          name: 'Miami Beach',
-          venue: 'Faena Hotel · Q4',
-          lat: 25.7814,
-          lng: -80.1306,
+          lat: 25.7957, lng: -80.1268,
+          venue: 'Faena Hotel',
+          place: 'Miami Beach, Florida',
+          quarter: 'Q4 — The Coastal Edition',
           color: '#4ecdc4',
-          className: 'miami'
+          url: 'https://www.faena.com/miami-beach',
+          slideId: 'slide-8'
         },
         {
-          name: 'Grand Cayman',
-          venue: 'The Westin · Select',
-          lat: 19.3667,
-          lng: -81.3667,
+          lat: 36.1558, lng: -86.7742,
+          venue: 'The Joseph',
+          place: 'Nashville, Tennessee',
+          quarter: 'Q1 — The Southern Edition',
+          color: '#d4a373',
+          url: 'https://www.thejosephnashville.com/',
+          slideId: 'slide-9'
+        },
+        {
+          lat: 19.3313, lng: -81.2356,
+          venue: 'The Westin Grand Cayman',
+          place: 'Seven Mile Beach, Grand Cayman',
+          quarter: 'The Island Edition',
           color: '#26c6da',
-          className: 'cayman'
+          url: 'https://www.marriott.com/en-us/hotels/gcmmi-the-westin-grand-cayman-seven-mile-beach-resort-and-spa/overview/',
+          slideId: 'slide-10'
         }
       ];
 
-      // Initialize map centered on USA
-      const map = L.map('resort-map', {
-        center: [37.5, -95],
-        zoom: 4,
-        dragging: true,
-        zoomControl: true,
-        attributionControl: false,
-        minZoom: 3,
-        maxZoom: 8,
-        scrollWheelZoom: true
-      });
-
-      // Add a subtle tile layer
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-        opacity: 0.3,
-        maxZoom: 20
-      }).addTo(map);
-
-      // Add markers for each resort
-      resorts.forEach((resort, index) => {
-        // Create a custom HTML icon
-        const html = `<div class="resort-marker ${resort.className}" style="animation-delay: ${index * 0.5}s; color: ${resort.color}; font-size: 24px; font-weight: bold;">●</div>`;
-
-        const icon = L.divIcon({
-          html: html,
-          iconSize: [32, 32],
-          iconAnchor: [16, 16],
-          popupAnchor: [0, -10],
-          className: 'resort-marker-container'
+      locations.forEach(function (loc) {
+        var icon = L.divIcon({
+          className: '',
+          html: '<div style="width:16px;height:16px;border-radius:50%;background:' + loc.color + ';border:2.5px solid rgba(255,255,255,0.7);box-shadow:0 0 12px ' + loc.color + '80, 0 0 24px ' + loc.color + '40;"></div>',
+          iconSize: [16, 16],
+          iconAnchor: [8, 8],
+          popupAnchor: [0, -12]
         });
 
-        const marker = L.marker([resort.lat, resort.lng], { icon: icon })
-          .bindPopup(`
-            <div class="resort-popup">
-              <div class="resort-name">${resort.name}</div>
-              <div class="resort-venue">${resort.venue}</div>
-            </div>
-          `)
-          .addTo(map);
+        var popup = '<div class="popup-quarter" style="color:' + loc.color + ';">' + loc.quarter + '</div>' +
+          '<div class="popup-venue">' + loc.venue + '</div>' +
+          '<div class="popup-location">' + loc.place + '</div>' +
+          '<a href="' + loc.url + '" target="_blank" rel="noopener" class="popup-cta">Visit Resort &rarr;</a>' +
+          '&nbsp; <a href="#' + loc.slideId + '" class="popup-cta" onclick="document.getElementById(\'' + loc.slideId + '\').scrollIntoView({behavior:\'smooth\'});return false;">View Details &rarr;</a>';
+
+        L.marker([loc.lat, loc.lng], { icon: icon })
+          .addTo(map)
+          .bindPopup(popup, { maxWidth: 260 });
       });
 
-      // Fit all markers in view
-      const group = new L.featureGroup(
-        resorts.map(resort => L.marker([resort.lat, resort.lng]))
-      );
-      map.fitBounds(group.getBounds().pad(0.15), { maxZoom: 5 });
+      /* Fit map to show all markers */
+      var bounds = L.latLngBounds(locations.map(function (l) { return [l.lat, l.lng]; }));
+      map.fitBounds(bounds.pad(0.3));
+
+      /* Re-invalidate map size when slide becomes visible */
+      var mapSlide = document.getElementById('slide-11');
+      var mapObserver = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          map.invalidateSize();
+        }
+      }, { threshold: 0.1 });
+      mapObserver.observe(mapSlide);
     })();
   </script>
 </body>

@@ -1601,7 +1601,69 @@
       .timeline-time { color: var(--navy) !important; }
       .nav-dot { display: none !important; }
     }
+
+    /* ─── Leaflet Map Styles ─────────────────────────────────────────────── */
+    #resort-map {
+      width: 100%;
+      height: 460px;
+      border-radius: 12px;
+      overflow: hidden;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .leaflet-container {
+      background: rgba(20, 30, 50, 0.8);
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    .leaflet-tile-pane {
+      opacity: 0.3;
+    }
+
+    .resort-popup {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+    }
+
+    .resort-popup .leaflet-popup-content {
+      margin: 10px;
+      color: var(--navy-darkest);
+    }
+
+    .resort-popup .resort-name {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+      color: var(--navy-darkest);
+    }
+
+    .resort-popup .resort-venue {
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.7);
+    }
+
+    .resort-marker {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      animation: resortPulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes resortPulse {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.2); opacity: 0.5; }
+    }
+
+    .resort-marker.deervalley { color: #8fb8d4; }
+    .resort-marker.sedona { color: #d4845a; }
+    .resort-marker.nashville { color: #d4a373; }
+    .resort-marker.miami { color: #4ecdc4; }
+    .resort-marker.cayman { color: #26c6da; }
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
 <body>
 
@@ -2294,59 +2356,7 @@
         <h2 class="light">Choose Your Edition</h2>
         <p class="slide-subtitle" style="color:rgba(255,255,255,0.55);margin:0 auto;">Each location creates a different kind of clarity. Pick the environment that matches how you think best.</p>
       </div>
-      <div class="map-wrap">
-        <svg viewBox="0 0 1000 700" width="100%" style="max-height:460px;">
-          <!-- Subtle US + Caribbean landmass -->
-          <path d="M130,42 L110,90 L95,165 L100,210 L140,280 L185,330 L200,350 L250,365 L300,370 L370,370 L430,400 L480,450 L510,490 L540,415 L580,410 L620,410 L665,412 L700,430 L740,455 L770,500 L758,525 L775,475 L758,370 L800,340 L845,310 L825,260 L830,225 L860,195 L870,185 L908,168 L940,105 L960,65 L920,90 L890,125 L830,145 L780,110 L723,85 L660,70 L570,60 L500,40 L460,25 L380,30 L310,40 L230,38 Z"
-                fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1.5" stroke-linejoin="round"/>
-          <!-- Florida peninsula hint -->
-          <path d="M740,455 L755,480 L770,500 L758,525 L745,510 L738,480 Z"
-                fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-          <!-- Caribbean water area hint -->
-          <ellipse cx="750" cy="590" rx="120" ry="50" fill="rgba(38,198,218,0.03)" stroke="rgba(38,198,218,0.06)" stroke-width="1"/>
-
-          <!-- Connection lines (subtle) -->
-          <line x1="284" y1="193" x2="665" y2="285" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4,6"/>
-          <line x1="281" y1="311" x2="665" y2="285" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4,6"/>
-          <line x1="665" y1="285" x2="770" y2="498" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4,6"/>
-          <line x1="770" y1="498" x2="748" y2="620" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4,6"/>
-
-          <!-- Deer Valley, UT -->
-          <circle cx="284" cy="193" r="18" fill="#8fb8d4" opacity="0.2" class="map-pulse"/>
-          <circle cx="284" cy="193" r="7" fill="#8fb8d4"/>
-          <circle cx="284" cy="193" r="3" fill="white" opacity="0.6"/>
-          <text x="284" y="172" text-anchor="middle" class="map-pin-label">Deer Valley</text>
-          <text x="284" y="224" text-anchor="middle" class="map-pin-sub">Stein Eriksen Lodge · Q3</text>
-
-          <!-- Sedona, AZ -->
-          <circle cx="250" cy="320" r="18" fill="#d4845a" opacity="0.2" class="map-pulse" style="animation-delay:0.5s"/>
-          <circle cx="250" cy="320" r="7" fill="#d4845a"/>
-          <circle cx="250" cy="320" r="3" fill="white" opacity="0.6"/>
-          <text x="200" y="305" text-anchor="end" class="map-pin-label">Sedona</text>
-          <text x="200" y="320" text-anchor="end" class="map-pin-sub">Enchantment Resort · Q2</text>
-
-          <!-- Nashville, TN -->
-          <circle cx="665" cy="285" r="18" fill="#d4a373" opacity="0.2" class="map-pulse" style="animation-delay:1.0s"/>
-          <circle cx="665" cy="285" r="7" fill="#d4a373"/>
-          <circle cx="665" cy="285" r="3" fill="white" opacity="0.6"/>
-          <text x="665" y="264" text-anchor="middle" class="map-pin-label">Nashville</text>
-          <text x="665" y="316" text-anchor="middle" class="map-pin-sub">The Joseph · Q1</text>
-
-          <!-- Miami Beach, FL -->
-          <circle cx="770" cy="498" r="18" fill="#4ecdc4" opacity="0.2" class="map-pulse" style="animation-delay:1.5s"/>
-          <circle cx="770" cy="498" r="7" fill="#4ecdc4"/>
-          <circle cx="770" cy="498" r="3" fill="white" opacity="0.6"/>
-          <text x="815" y="492" text-anchor="start" class="map-pin-label">Miami Beach</text>
-          <text x="815" y="507" text-anchor="start" class="map-pin-sub">Faena Hotel · Q4</text>
-
-          <!-- Grand Cayman -->
-          <circle cx="720" cy="620" r="18" fill="#26c6da" opacity="0.2" class="map-pulse" style="animation-delay:2.0s"/>
-          <circle cx="720" cy="620" r="7" fill="#26c6da"/>
-          <circle cx="720" cy="620" r="3" fill="white" opacity="0.6"/>
-          <text x="665" y="614" text-anchor="end" class="map-pin-label">Grand Cayman</text>
-          <text x="665" y="629" text-anchor="end" class="map-pin-sub">The Westin · Select</text>
-        </svg>
-      </div>
+      <div id="resort-map"></div>
     </div>
   </section>
 
@@ -2646,6 +2656,99 @@
       if (slides[0]) {
         slides[0].classList.add('visible');
       }
+    })();
+
+    /* ── Initialize Leaflet Map with Resort Locations ────────────────── */
+    (function() {
+      const resorts = [
+        {
+          name: 'Deer Valley',
+          venue: 'Stein Eriksen Lodge · Q3',
+          lat: 40.3667,
+          lng: -111.4758,
+          color: '#8fb8d4',
+          className: 'deervalley'
+        },
+        {
+          name: 'Sedona',
+          venue: 'Enchantment Resort · Q2',
+          lat: 34.4325,
+          lng: -111.7897,
+          color: '#d4845a',
+          className: 'sedona'
+        },
+        {
+          name: 'Nashville',
+          venue: 'The Joseph · Q1',
+          lat: 36.1627,
+          lng: -86.7816,
+          color: '#d4a373',
+          className: 'nashville'
+        },
+        {
+          name: 'Miami Beach',
+          venue: 'Faena Hotel · Q4',
+          lat: 25.7814,
+          lng: -80.1306,
+          color: '#4ecdc4',
+          className: 'miami'
+        },
+        {
+          name: 'Grand Cayman',
+          venue: 'The Westin · Select',
+          lat: 19.3667,
+          lng: -81.3667,
+          color: '#26c6da',
+          className: 'cayman'
+        }
+      ];
+
+      // Initialize map centered on USA
+      const map = L.map('resort-map', {
+        center: [37.5, -95],
+        zoom: 4,
+        dragging: true,
+        zoomControl: true,
+        attributionControl: false,
+        minZoom: 3,
+        maxZoom: 8,
+        scrollWheelZoom: true
+      });
+
+      // Add a subtle tile layer
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+        opacity: 0.3,
+        maxZoom: 20
+      }).addTo(map);
+
+      // Add markers for each resort
+      resorts.forEach((resort, index) => {
+        // Create a custom HTML icon
+        const html = `<div class="resort-marker ${resort.className}" style="animation-delay: ${index * 0.5}s; color: ${resort.color}; font-size: 24px; font-weight: bold;">●</div>`;
+
+        const icon = L.divIcon({
+          html: html,
+          iconSize: [32, 32],
+          iconAnchor: [16, 16],
+          popupAnchor: [0, -10],
+          className: 'resort-marker-container'
+        });
+
+        const marker = L.marker([resort.lat, resort.lng], { icon: icon })
+          .bindPopup(`
+            <div class="resort-popup">
+              <div class="resort-name">${resort.name}</div>
+              <div class="resort-venue">${resort.venue}</div>
+            </div>
+          `)
+          .addTo(map);
+      });
+
+      // Fit all markers in view
+      const group = new L.featureGroup(
+        resorts.map(resort => L.marker([resort.lat, resort.lng]))
+      );
+      map.fitBounds(group.getBounds().pad(0.15), { maxZoom: 5 });
     })();
   </script>
 </body>

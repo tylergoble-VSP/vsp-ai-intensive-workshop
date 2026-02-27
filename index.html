@@ -1260,29 +1260,104 @@
     .rule.light { background: var(--green-lightest); opacity: 0.6; }
     .rule.centered { margin-left: auto; margin-right: auto; }
 
-    /* ─── Responsive ──────────────────────────────────────────────────────── */
+    /* ─── Responsive: Tablet ─────────────────────────────────────────────── */
     @media (max-width: 900px) {
-      .slide { padding: 48px 32px; }
+      html {
+        scroll-snap-type: y proximity;  /* prevent clipping on tall slides */
+      }
+
+      .slide {
+        padding: 48px 32px;
+        min-height: auto;               /* let content determine height */
+        padding-top: 60px;
+        padding-bottom: 60px;
+      }
+
       .grid-2, .grid-3, .grid-4, .grid-5, .pricing-tiers, .flights-grid { grid-template-columns: 1fr 1fr; }
       #nav-dots { display: none; }
       .experience-grid { grid-template-columns: 1fr 1fr 1fr; }
       .mini-agenda-days { grid-template-columns: 1fr 1fr 1fr; }
       .investment-visual { flex-direction: column; text-align: center; }
+
+      /* Override inline grid on location slides */
       .location-slide .slide-inner > div:first-child {
         display: grid !important;
         grid-template-columns: 1fr !important;
         gap: 32px !important;
       }
+
+      /* Override inline grid on slide-5 timeline */
+      #slide-5 .slide-inner > div[style] {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 28px !important;
+      }
     }
 
+    /* ─── Responsive: Mobile ─────────────────────────────────────────────── */
     @media (max-width: 600px) {
-      .slide { padding: 40px 20px; }
-      .grid-2, .grid-3, .grid-4, .grid-5, .pricing-tiers, .flights-grid { grid-template-columns: 1fr; }
-      .cohort-callout { flex-direction: column; }
-      .experience-grid, .mini-agenda-days { grid-template-columns: 1fr; }
+      html {
+        scroll-snap-type: none;          /* disable snap entirely on phone */
+      }
+
+      .slide {
+        padding: 40px 20px;
+        min-height: auto;
+      }
+
+      h1 { font-size: clamp(26px, 8vw, 42px); }
+      h2 { font-size: clamp(22px, 6vw, 32px); }
+      h3 { font-size: clamp(16px, 4.5vw, 22px); }
+
+      .slide-header { margin-bottom: 28px; }
+
+      .grid-2, .grid-3, .grid-4, .grid-5, .pricing-tiers { grid-template-columns: 1fr; }
+      .flights-grid { grid-template-columns: 1fr 1fr; }
+      .experience-grid { grid-template-columns: 1fr; }
+      .mini-agenda-days { grid-template-columns: 1fr; }
+
+      .cohort-callout { flex-direction: column; padding: 20px; gap: 16px; }
+
+      .investment-visual { padding: 20px; gap: 20px; }
       .investment-bar { flex-direction: column; height: auto; }
       .inv-you, .inv-vsp { width: 100%; padding: 10px; justify-content: center; }
-      .flights-grid { grid-template-columns: 1fr 1fr; }
+
+      .cost-breakdown { padding: 20px; font-size: 12px; }
+
+      .card { padding: 20px 20px 20px 18px; }
+      .tier-card { padding: 24px 20px; }
+      .approach-col { padding: 24px 20px; }
+      .day-card { padding: 24px 20px; }
+
+      /* Cover slide adjustments */
+      #slide-1 .cover-tagline { margin-bottom: 28px; }
+      .vsp-diamond { width: 60px; height: 60px; margin-bottom: 24px; }
+      .vsp-diamond .layer-navy  { width: 60px; height: 60px; }
+      .vsp-diamond .layer-yellow{ width: 44px; height: 44px; }
+      .vsp-diamond .layer-green { width: 28px; height: 28px; }
+
+      /* Location slide accent circles — smaller on mobile */
+      .location-accent { display: none; }
+      #slide-1 .accent-circle { display: none; }
+
+      /* Signature moment */
+      .signature-moment { padding: 16px 18px; }
+
+      /* Family slide */
+      .family-offer { padding: 24px 20px; }
+      .family-icon { width: 64px; height: 64px; margin-bottom: 20px; }
+
+      /* Closing slide */
+      .apply-btn { padding: 14px 32px; font-size: 13px; }
+    }
+
+    /* ─── Responsive: Small phone ────────────────────────────────────────── */
+    @media (max-width: 380px) {
+      .slide { padding: 32px 16px; }
+      .flights-grid { grid-template-columns: 1fr; }
+      .exp-chip { font-size: 11px; padding: 6px 12px; }
+      .cost-breakdown { padding: 16px; }
+      .tier-card { padding: 20px 16px; }
     }
 
     /* ─── Accessibility ──────────────────────────────────────────────────── */
